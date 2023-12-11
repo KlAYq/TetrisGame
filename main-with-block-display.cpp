@@ -49,6 +49,12 @@ void drawBlock(int index, int Y, int X)
     cout << SetColor(color[index], " --- ");
 }
 
+void drawEmptyCell(int index, int Y, int X)
+{
+    GoTo(Y * 3 + 1, X * 5 + 2);
+    cout << SetColor(color[index], "-");
+}
+
 class Tetromino;
 
 class Board {
@@ -65,6 +71,8 @@ public:
             for (int j = 0; j < cols; ++j) {
                 if (grid[i][j] == '0')
 					drawBlock(1, i, j);
+				else 
+					drawEmptyCell(2, i, j);
             }
         }
     }
