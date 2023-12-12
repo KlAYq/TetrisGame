@@ -1,14 +1,17 @@
-void SetWindowSize(SHORT width, SHORT height)
+//Thêm cái này vô main
+SetConsoleOutputCP(65001);
+
+//Hàm vẽ mới
+void drawBlock(int index, int Y, int X)
 {
-    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-
-    SMALL_RECT WindowSize;
-    WindowSize.Top = 0;
-    WindowSize.Left = 0;
-    WindowSize.Right = width - 1;
-    WindowSize.Bottom = height - 1;
-
-    SetConsoleWindowInfo(hStdout, 1, &WindowSize);
+    GoTo(Y * 2, X * 3);
+    cout << SetColor(color[index], "\u250c\u2500\u2510");
+    GoTo(Y * 2 + 1, X * 3);
+    cout << SetColor(color[index], "\u2514\u2500\u2518");
 }
 
-SetWindowSize(99, 62);
+void drawEmptyCell(int index, int Y, int X)
+{
+    GoTo(Y * 2 + 1, X * 3 + 1);
+    cout << SetColor(color[index], ".");
+}
