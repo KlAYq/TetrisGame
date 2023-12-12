@@ -8,10 +8,20 @@
 //#include <utility>
 #include <conio.h>
 #include <windows.h>
+#include <map>
 
 using namespace std;
 
-string color[18] = {"00ffff", "ff115c", "39777c", "edbb99", "2ecc71", "f7dc6f", "e6b0aa", "6600ff", "e5e8e8", "e74c3c", "80af21", "808080", "af5f00", "005fff", "ff5fd7", "e4e4e4", "ffd700", "00af00"};
+map <char, string> colorMap = {{'G', "cccccc"}, {'W', "ffffff"}, {'Z', "b20000"}, {'O', "e5e500"}, {'S', "007300"}, {'T', "b266b2"}, {'I', "00e1d0"}, {'L', "ffa500"}, {'J', "0000ff"}};
+
+string Highlight(string color, string text)
+{
+    int r = stoi(color.substr(0, 2), nullptr, 16);
+    int g = stoi(color.substr(2, 2), nullptr, 16);
+    int b = stoi(color.substr(4, 2), nullptr, 16);
+    
+    return "\033[48;2;" + to_string(r) + ";" + to_string(g) + ";" + to_string(b) + "m" + text + "\033[0m";
+}
 
 string SetColor(string color, string text)
 {
@@ -42,20 +52,20 @@ void GoTo(SHORT posY, SHORT posX)
 	SetConsoleCursorPosition(hStdout, Position);
 }
 
-void drawBlock(int index, int Y, int X)
+void drawBlock(string color, int Y, int X)
 {
-    GoTo(Y * 3, X * 5);
-    cout << SetColor(color[index], " --- ");
-    GoTo(Y * 3 + 1, X * 5);
-    cout << SetColor(color[index], "|   |");
-    GoTo(Y * 3 + 2, X * 5);
-    cout << SetColor(color[index], " --- ");
+    GoTo(Y * 2, X * 3);
+    cout << Highlight(color, "   ");
+    GoTo(Y * 2 + 1, X * 3);
+    cout << Highlight(color, "   ");
 }
 
-void drawEmptyCell(int index, int Y, int X)
+void drawEmptyCell(string color, int Y, int X)
 {
-    GoTo(Y * 3 + 1, X * 5 + 2);
-    cout << SetColor(color[index], "-");
+    GoTo(Y * 2, X * 3);
+    cout << Highlight(color, "   ");
+    GoTo(Y * 2 + 1, X * 3);
+    cout << Highlight(color, "   ");
 }
 
 class Tetromino;
@@ -69,21 +79,23 @@ private:
 public:
     Board(int numRows, int numCols) : rows(numRows), cols(numCols), grid(numRows, vector<char>(numCols, ' ')) {}
 
-    void display() const {
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                if (grid[i][j] == '0')
-					drawBlock(1, i, j);
-				else 
-					drawEmptyCell(2, i, j);
-            }
-        }
-    }
-	void enableCell(int x, int y){
-		grid[x][y] = '0';
-	}
-	void disableCell(int x, int y){
-		grid[x][y] = ' ';
+	void display() const
+	{
+		for (int i = 0; i < rows; ++i)
+		{
+			for (int j = 0; j < cols; ++j)
+			{
+				if (grid[i][j] != ' ')
+					drawBlock(colorMap[grid[i][j]], i, j);
+				else
+				{
+					if ((i + j) % 2 == 0)
+						drawEmptyCell(colorMap['G'], i, j);
+					else
+						drawEmptyCell(colorMap['W'], i, j);
+				}
+			}
+		}
 	}
 	bool isInside(int x, int y){
 		return x >= 0 && x < rows && y >= 0 && y < cols;
@@ -171,9 +183,10 @@ public:
     	for (int i = 0; i < blocks[state].size(); i++){
     		int u = pos.first + blocks[state][i].first;
     		int v = pos.second + blocks[state][i].second;
-    		drawBlock(1, u, v);
+    		drawBlock(colorMap[type()], u, v);
 		}
 	};
+	virtual char type() = 0;
 };
 
 void Board::addShape(Tetromino* tetromino){
@@ -182,14 +195,18 @@ void Board::addShape(Tetromino* tetromino){
 		for (int i = 0; i < 4; i++){
 			int u = pos.first + blocks[i].first;
     		int v = pos.second + blocks[i].second;
-			grid[u][v] = '0';
+			grid[u][v] = tetromino->type();
 		}
-	}
+}
 
 class O_Shape : public Tetromino {
 public:
     O_Shape(int x, int y): Tetromino(x, y){
     	blocks.push_back({{0, 0}, {0, 1}, {1, 0}, {1, 1}});
+	}
+	char type()
+	{
+		return 'O';
 	}
 };
 
@@ -201,15 +218,23 @@ public:
     	blocks.push_back({{1, -1}, {1, 0}, {1, 1}, {1, 2}});
     	blocks.push_back({{-1, 0}, {0, 0}, {1, 0}, {2, 0}});
 	}
+	char type()
+	{
+		return 'I';
+	}
 };
 
 class T_Shape : public Tetromino {
-public:
+public: 
     T_Shape(int x, int y): Tetromino(x, y){
     	blocks.push_back({{0, 0}, {-1, 0}, {0, -1}, {0, 1}});
     	blocks.push_back({{0, 0}, {0, 1}, {-1, 0}, {1, 0}});
     	blocks.push_back({{0, 0}, {0, -1}, {0, 1}, {1, 0}});
     	blocks.push_back({{0, 0}, {0, -1}, {-1, 0}, {1, 0}});
+	}
+	char type()
+	{
+		return 'T';
 	}
 };
 
@@ -221,6 +246,10 @@ public:
     	blocks.push_back({{0, 0}, {0, 1}, {1, -1}, {1, 0}});
     	blocks.push_back({{0, 0}, {-1, -1}, {0, -1}, {1, 0}});
 	}
+	char type()
+	{
+		return 'S';
+	}
 };
 
 class Z_Shape : public Tetromino {
@@ -230,6 +259,10 @@ public:
     	blocks.push_back({{0, 0}, {-1, 1}, {0, 1}, {1, 0}});
     	blocks.push_back({{0, 0}, {0, -1}, {1, 0}, {1, 1}});
     	blocks.push_back({{0, 0}, {-1, 0}, {0, -1}, {1, -1}});
+	}
+	char type()
+	{
+		return 'Z';
 	}
 };
 
@@ -241,6 +274,10 @@ public:
     	blocks.push_back({{0, 0}, {0, -1}, {0, 1}, {1, 1}});
     	blocks.push_back({{0, 0}, {-1, 0}, {1, 0}, {1, -1}});
 	}
+	char type()
+	{
+		return 'J';
+	}
 };
 
 class L_Shape : public Tetromino {
@@ -251,10 +288,11 @@ public:
     	blocks.push_back({{0, 0}, {1, -1}, {0, -1}, {0, 1}});
     	blocks.push_back({{0, 0}, {-1, -1}, {-1, 0}, {1, 0}});
 	}
+	char type()
+	{
+		return 'L';
+	}
 };
-
-
-
 
 class TetrisGame {
 private:
@@ -292,41 +330,51 @@ public:
     	
     }
 
-    void updateGame() {
+    void updateGame(time_t &originaltime) {
     	if (currentTetromino == NULL)
     		spawnTetromino(0, 5);
-    	char input;
-    	input = getch();
-		
-    	switch (input){
-    	case 's':
-    		currentTetromino->move(1, 0, board);
-    		break;
-    	case 'd':
-    		currentTetromino->move(0, 1, board);
-			break;
-		case 'a':
-			currentTetromino->move(0, -1, board);
-			break;
-		case 'w': // rotate
-			currentTetromino->rotate(board);
-			break;
-		case 'f': // drop
-			while (!currentTetromino->collisionCheck(board))
-				currentTetromino->move(1, 0, board);
-			break;
+		time_t now = time(0);
+		if (now - originaltime >= 1){
+			if (currentTetromino->collisionCheck(board)){
+				board.addShape(currentTetromino);
+				board.checkClear(currentTetromino->getPos().first-3);
+				delete currentTetromino;
+				currentTetromino = NULL;
+				return;
+			}
+			originaltime = now;
+			currentTetromino->move(1, 0, board);
+			displayGame();
 		}
-		if (currentTetromino->collisionCheck(board)){
-			board.addShape(currentTetromino);
-			board.checkClear(currentTetromino->getPos().first-3);
-			delete currentTetromino;
-			currentTetromino = NULL;
-		}	
-		
+    	char input;
+		if (kbhit())
+		{
+			input = getch();
+			input = tolower(input);
+			
+			switch (input){
+			case 's':
+				currentTetromino->move(1, 0, board);
+				break;
+			case 'd':
+				currentTetromino->move(0, 1, board);
+				break;
+			case 'a':
+				currentTetromino->move(0, -1, board);
+				break;
+			case 'w': // rotate
+				currentTetromino->rotate(board);
+				break;
+			case 'f': // drop
+				while (!currentTetromino->collisionCheck(board))
+					currentTetromino->move(1, 0, board);
+				break;
+			}
+			displayGame();
+		}
     }
 
     void displayGame() const {
-        system("cls");
         board.display();
         if (currentTetromino != NULL)
         	currentTetromino->display();
@@ -338,10 +386,10 @@ int main() {
     // Initialize and run the Tetris game
     TetrisGame game(20, 10);
 	SetConsoleANSI();
-
+	time_t originaltime = time(0);
+	game.displayGame();
     while (true) {
-        game.updateGame();
-        game.displayGame();
+        game.updateGame(originaltime);
     }
 
     return 0;
