@@ -11,9 +11,9 @@ string Highlight(string color, string text)
     return "\033[48;2;" + to_string(r) + ";" + to_string(g) + ";" + to_string(b) + "m" + text + "\033[0m";
 }
 
-// Bảng màu mới (2 cái đầu là 2 màu của cái board)
-string color[18] = {"d3d3d3", "5a5a5a", "39777c", "edbb99", "2ecc71", "f7dc6f", "e6b0aa", "6600ff", "e5e8e8", "e74c3c", "80af21", "808080", "af5f00", "005fff", "ff5fd7", "e4e4e4", "ffd700", "00af00"};
-
+// Bảng màu mới (2 cái cuối là 2 màu của cái board)
+string color[9] = {"fff100", "f6921e", "8bc53f", "ec008b", "ffc000", "00adee", "ec1b24", "d3d3d3", "5a5a5a"};
+                  {O, I, T, S, Z, J, L}
 // Hàm vẽ mới
 void drawBlock(int index, int Y, int X)
 {
