@@ -97,11 +97,21 @@ public:
 			}
 		}
 	}
-	bool isInside(int x, int y){
-		return x >= 0 && x < rows && y >= 0 && y < cols;
+	int isInside(int x, int y){
+		if (y < 0)
+			return -1; // outer left
+		else if (y >= cols)
+			return 1; // outer right
+		else if (x >= 0 && x < rows)
+			return 2; // inside
+		else
+			return 0; // not inside
 	}
 	int getRow(){
 		return rows;
+	}
+	int getCol(){
+		return cols;
 	}
 	void clearRow(int x){
 		for (int j = 0; j < cols; j++)
@@ -146,7 +156,7 @@ public:
     	for (int i = 0; i < blocks[state].size(); i++){
     		int u = pos.first + blocks[state][i].first + offSetX;
     		int v = pos.second + blocks[state][i].second + offSetY;
-    		if (!board.isInside(u, v) || board.getCell(u, v) != ' ')
+    		if (board.isInside(u, v) != 2 || board.getCell(u, v) != ' ')
     			return;
 		}
     	
@@ -161,7 +171,7 @@ public:
 	}
 	bool collisionCheck(Board& board){
 		for (int i = 0; i < 4; i++){
-			if ( pos.first + blocks[state][i].first + 1  == board.getRow() || board.getCell(pos.first + blocks[state][i].first + 1, pos.second + blocks[state][i].second ) != ' '){
+			if (pos.first + blocks[state][i].first + 1  == board.getRow() || board.getCell(pos.first + blocks[state][i].first + 1, pos.second + blocks[state][i].second ) != ' '){
 				return true;				
 			}
 		}
@@ -169,13 +179,20 @@ public:
 	}
 	void rotate(Board& board){
 		int tempState = (state + 1) % blocks.size();
+
+		int moveDir = 0;
 		for (int i = 0; i < blocks[tempState].size(); i++){
     		int u = pos.first + blocks[tempState][i].first;
     		int v = pos.second + blocks[tempState][i].second;
-    		if (!board.isInside(u, v) || board.getCell(u, v) != ' ')
-    			return;
+    		if (board.isInside(u, v) == -1)
+    			moveDir = max(moveDir, -v);
+			else if (board.isInside(u, v) == 1)
+				moveDir = min(moveDir, board.getCol() - v - 1);
+			if (board.isInside(u, v) == 2 && board.getCell(u, v + moveDir) != ' ')
+				return;
 		}
-		
+		move(0, moveDir, board);
+
 		state++;
 		state %= blocks.size();
 	}
@@ -303,10 +320,10 @@ public:
     TetrisGame(int numRows, int numCols) : board(numRows, numCols), currentTetromino(nullptr) {}
 
     void spawnTetromino(int x, int y) {
-    	int random = rand() % 7;
+    	int random = rand() % 2;
     	switch (random){
     		case 0:
-    			currentTetromino = new O_Shape(x, y);
+    			currentTetromino = new T_Shape(x, y);
     			break;
     		case 1: 
     			currentTetromino = new I_Shape(x, y);
