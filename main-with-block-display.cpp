@@ -77,8 +77,8 @@ private:
     vector<vector<char>> grid;
 
 public:
-    Board(int numRows, int numCols) : rows(numRows), cols(numCols), grid(numRows, vector<char>(numCols, ' ')) {}
-
+    Board(int numRows, int numCols) : rows(numRows + 4), cols(numCols), grid(numRows + 4, vector<char>(numCols, ' ')) {}
+	//Extra 4 rows for spawning/checking gameover
 	void display() const
 	{
 		for (int i = 0; i < rows; ++i)
@@ -89,10 +89,10 @@ public:
 					drawBlock(colorMap[grid[i][j]], i, j);
 				else
 				{
-					if ((i + j) % 2 == 0)
-						drawEmptyCell(colorMap['G'], i, j);
-					else
+					if ((i + j) % 2 != 0 || i < 4)
 						drawEmptyCell(colorMap['W'], i, j);
+					else
+						drawEmptyCell(colorMap['G'], i, j);
 				}
 			}
 		}
@@ -123,7 +123,8 @@ public:
 				grid[i][j] = grid[i-1][j];			
 		}
 	}
-	void checkClear(int pos){
+	bool checkClear(int pos, int &lines){
+		bool clear = false;
 		for (int i = pos; i < rows; i++){
 			int isComplete = true;
 			for (int j = 0; j < cols; j++)
@@ -131,11 +132,23 @@ public:
 					isComplete = false;
 				}
 			if (isComplete)
+			{
 				clearRow(i);
+				lines++;
+				clear = true;
+			}
 		}
+		return clear;
 	}
 	char getCell(int x, int y){
 		return grid[x][y];
+	}
+	bool isValid(){
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < cols; j++)
+				if (grid[i][j] != ' ')
+					return false;
+		return true;
 	}
 	void addShape(Tetromino* tetromino);
 };
@@ -207,13 +220,13 @@ public:
 };
 
 void Board::addShape(Tetromino* tetromino){
-		pair <int, int> pos = tetromino->getPos();
-		vector <pair <int, int> > blocks = tetromino->getBlocks();
-		for (int i = 0; i < 4; i++){
-			int u = pos.first + blocks[i].first;
-    		int v = pos.second + blocks[i].second;
-			grid[u][v] = tetromino->type();
-		}
+	pair <int, int> pos = tetromino->getPos();
+	vector <pair <int, int> > blocks = tetromino->getBlocks();
+	for (int i = 0; i < 4; i++){
+		int u = pos.first + blocks[i].first;
+		int v = pos.second + blocks[i].second;
+		grid[u][v] = tetromino->type();
+	}
 }
 
 class O_Shape : public Tetromino {
@@ -315,12 +328,17 @@ class TetrisGame {
 private:
     Board board;
     Tetromino* currentTetromino;
+	const time_t starttime; //Start time
+	time_t nowtime; //Current time, only update once per second
+	int clearedlines;  //Number of cleared lines in current level
+	int score; 
+	int level;	//A level requires 2*level + 1 lines to be cleared
 
 public:
-    TetrisGame(int numRows, int numCols) : board(numRows, numCols), currentTetromino(nullptr) {}
+    TetrisGame(int numRows, int numCols) : board(numRows, numCols), currentTetromino(nullptr), starttime(time(0)), clearedlines(0) {}
 
     void spawnTetromino(int x, int y) {
-    	int random = rand() % 2;
+    	int random = rand() % 7;
     	switch (random){
     		case 0:
     			currentTetromino = new T_Shape(x, y);
@@ -347,22 +365,49 @@ public:
     	
     }
 
-    void updateGame(time_t &originaltime) {
+	void update_score(int newclearedlines) {
+		clearedlines += newclearedlines;
+		if (newclearedlines >= 1)
+		{
+			score += (newclearedlines - 1) * 200 + level * 100;
+		}
+	}
+
+	bool gameOver() {
+		return !board.isValid() || (nowtime - starttime >= 120);
+	}
+
+    void updateGame() {
+		if (clearedlines == 2 * level + 1){
+			level++;
+			clearedlines = 0;
+		}
     	if (currentTetromino == NULL)
     		spawnTetromino(0, 5);
+
+		//Auto drop and clear lines
 		time_t now = time(0);
-		if (now - originaltime >= 1){
+		if (now - nowtime >= 1){
 			if (currentTetromino->collisionCheck(board)){
+				//Merge current shape into board
 				board.addShape(currentTetromino);
-				board.checkClear(currentTetromino->getPos().first-3);
+
+				//Check for clear lines and update score
+				int newclearedlines = 0;
+				board.checkClear(currentTetromino->getPos().first-3, newclearedlines);
+				update_score(newclearedlines);
+
+				//Delete current shape
 				delete currentTetromino;
 				currentTetromino = NULL;
 				return;
 			}
-			originaltime = now;
+
+			nowtime = now;
 			currentTetromino->move(1, 0, board);
 			displayGame();
 		}
+
     	char input;
 		if (kbhit())
 		{
@@ -396,6 +441,9 @@ public:
         if (currentTetromino != NULL)
         	currentTetromino->display();
     }
+	void displayUI() const {
+		
+	}
 };
 
 int main() {
@@ -403,10 +451,11 @@ int main() {
     // Initialize and run the Tetris game
     TetrisGame game(20, 10);
 	SetConsoleANSI();
-	time_t originaltime = time(0);
 	game.displayGame();
     while (true) {
-        game.updateGame(originaltime);
+        game.updateGame();
+		if (game.gameOver())
+			break;
     }
 
     return 0;
