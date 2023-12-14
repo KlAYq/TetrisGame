@@ -108,6 +108,6 @@ void TetrisGame::displayGame() const {
     	currentTetromino->display();
 }
 void TetrisGame::displayUI() const {
-	
+//	for (int i = 0; i < )
 }
 

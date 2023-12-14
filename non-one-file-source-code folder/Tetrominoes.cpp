@@ -1,23 +1,25 @@
 #pragma once
 #include "Tetrominoes.h"
+#define BORDER_W 0
+#define BORDER_L 6
 // Gameplay board
 
 Board::Board(int numRows, int numCols) : rows(numRows + 4), cols(numCols), grid(numRows + 4, vector<char>(numCols, ' ')) {}
 //Extra 4 rows for spawning/checking gameover
 void Board::display() const
 {
-	for (int i = 0; i < rows; ++i)
+	for (int i = 4; i < rows; ++i)
 	{
 		for (int j = 0; j < cols; ++j)
 		{
 			if (grid[i][j] != ' ')
-				drawBlock(colorMap[grid[i][j]], i, j);
+				drawBlock(colorMap[grid[i][j]], i + BORDER_W, j + BORDER_L);
 			else
 			{
 				if ((i + j) % 2 != 0 || i < 4)
-					drawEmptyCell(colorMap['W'], i, j);
+					drawEmptyCell(colorMap['W'], i + BORDER_W, j + BORDER_L);
 				else
-					drawEmptyCell(colorMap['G'], i, j);
+					drawEmptyCell(colorMap['G'], i + BORDER_W, j + BORDER_L);
 			}
 		}
 	}
@@ -141,7 +143,10 @@ void Tetromino::display(){
 	for (int i = 0; i < blocks[state].size(); i++){
 		int u = pos.first + blocks[state][i].first;
 		int v = pos.second + blocks[state][i].second;
-		drawBlock(colorMap[type()], u, v);
+		if (u < BORDER_W + 4)
+			continue;
+		else 
+			drawBlock(colorMap[type()], u + BORDER_W, v + BORDER_L);
 	}
 }
 
