@@ -108,6 +108,24 @@ void TetrisGame::displayGame() const {
     	currentTetromino->display();
 }
 void TetrisGame::displayUI() const {
-//	for (int i = 0; i < )
+	// Draw board border
+	for (int i = BORDER_W + 2; i < BORDER_W + 26; i++)
+		for (int j = BORDER_L - 2; j < BORDER_L + 12; j++)
+			if (i == BORDER_W + 2|| i == BORDER_W + 25)
+				drawEmptyCell(colorMap['W'], i, j);
+			else if (j == BORDER_L - 2|| j == BORDER_L + 11)
+				drawEmptyCell(colorMap['W'], i, j);
+				
+	// Draw game border
+	for (int i = 0; i < 24; i++)
+		for (int j = 0; j < 38; j++)
+			if (i == 0 || i == 23)
+				drawEmptyCell(colorMap['W'], i, j);
+			else if (j == 0 || j == 37)
+				drawEmptyCell(colorMap['W'], i, j);	
+	
+	//Next piece
+	
+	
 }
 

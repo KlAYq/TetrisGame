@@ -9,7 +9,6 @@
 
 using namespace std;
 
-
 class TetrisGame {
 private:
     Board board;

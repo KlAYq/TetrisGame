@@ -1,7 +1,6 @@
 #pragma once
 #include "Tetrominoes.h"
-#define BORDER_W 0
-#define BORDER_L 6
+
 // Gameplay board
 
 Board::Board(int numRows, int numCols) : rows(numRows + 4), cols(numCols), grid(numRows + 4, vector<char>(numCols, ' ')) {}
@@ -143,7 +142,7 @@ void Tetromino::display(){
 	for (int i = 0; i < blocks[state].size(); i++){
 		int u = pos.first + blocks[state][i].first;
 		int v = pos.second + blocks[state][i].second;
-		if (u < BORDER_W + 4)
+		if (u < 4)
 			continue;
 		else 
 			drawBlock(colorMap[type()], u + BORDER_W, v + BORDER_L);

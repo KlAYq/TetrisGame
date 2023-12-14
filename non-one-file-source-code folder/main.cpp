@@ -9,6 +9,7 @@ int main() {
     TetrisGame game(20, 10);
 	SetConsoleANSI();
 	game.displayGame();
+	game.displayUI();
     while (true) {
         game.updateGame();
 		if (game.gameOver())

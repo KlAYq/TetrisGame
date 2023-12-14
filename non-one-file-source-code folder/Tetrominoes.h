@@ -7,6 +7,9 @@
 #include <conio.h>
 #include <windows.h>
 
+#define BORDER_W -2 //
+#define BORDER_L 14  //6
+
 using namespace std;
 
 class Tetromino;
