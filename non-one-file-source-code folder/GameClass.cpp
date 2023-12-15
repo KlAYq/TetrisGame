@@ -107,6 +107,11 @@ void TetrisGame::displayGame() const {
     if (currentTetromino != NULL)
     	currentTetromino->display();
 }
+
+void drawOne(){
+	
+}
+
 void TetrisGame::displayUI() const {
 	// Draw board border
 	for (int i = BORDER_W + 2; i < BORDER_W + 26; i++)
@@ -126,6 +131,48 @@ void TetrisGame::displayUI() const {
 	
 	//Next piece
 	
+	//Time
 	
+	//Score
+}
+
+void TetrisGame::drawMenu() const {
+	//Dramatic border effect
+	for (int i = 0; i < 24; i++)
+		for (int j = 0; j < 38; j++)
+			if (i == 0 || i == 23){
+				Sleep(25);
+				drawEmptyCell(colorMap['W'], i, j);
+			}
+			else if (j == 0 || j == 37){
+				Sleep(25);
+				drawEmptyCell(colorMap['W'], i, j);	
+			}
+	
+	//Game logo
+	GoTo(10, 10);
+	ifstream logo("img/logo2.txt");
+	string line;
+	int iline = 0;
+	while(getline(logo, line)){
+		Sleep(25);
+		for (int i = 0; i < line.length(); i++)
+			if (line[i] == ' ')
+				drawEmptyCell("000000", 2 + iline, 4 + i);
+			else
+				drawBlock(colorMap[char(line[i])], 2 + iline, 4 + i);
+		iline++;
+	}
+	logo.close();
+	//Buttons
+	
+	GoTo(30,50);
+	
+	cout << "Press Enter to play";
+	_getch();
+	
+	for (int i = 1; i < 23; i++)
+		for (int j = 1; j < 32; j++)
+			drawEmptyCell("000000", i, j);
 }
 

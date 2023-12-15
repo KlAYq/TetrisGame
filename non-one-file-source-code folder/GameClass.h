@@ -6,7 +6,8 @@
 #include <conio.h>
 #include <windows.h>
 #include <map>
-
+#include <fstream>
+#include <string>
 using namespace std;
 
 class TetrisGame {
@@ -28,5 +29,9 @@ public:
     void updateGame();
     void displayGame() const;
 	void displayUI() const;
+	void drawMenu() const;
+	void drawHowToPlay() const;
 };
+
+
 
