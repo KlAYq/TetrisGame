@@ -69,7 +69,7 @@ void TetrisGame::updateGame()
 			//Delete current shape
 			delete currentTetromino;
 			currentTetromino = NULL;
-			PlaySound(TEXT("sfx/DropSFX01.wav"), NULL, SND_ASYNC | SND_FILENAME);
+			//PlaySound(TEXT("sfx/DropSFX01.wav"), NULL, SND_ASYNC | SND_FILENAME);
 			return;
 		}
 
