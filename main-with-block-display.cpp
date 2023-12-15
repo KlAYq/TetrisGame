@@ -192,19 +192,29 @@ public:
 	}
 	void rotate(Board& board){
 		int tempState = (state + 1) % blocks.size();
-
-		int moveDir = 0;
+		int special_I_shenanigans_is_so_peak = 0;
+		if (type() == 'I' && (tempState == 1 || tempState == 2))
+			special_I_shenanigans_is_so_peak = 1;
+		pair <int, int> moveDir = {0, 0};
 		for (int i = 0; i < blocks[tempState].size(); i++){
     		int u = pos.first + blocks[tempState][i].first;
     		int v = pos.second + blocks[tempState][i].second;
-    		if (board.isInside(u, v) == -1)
-    			moveDir = max(moveDir, -v);
-			else if (board.isInside(u, v) == 1)
-				moveDir = min(moveDir, board.getCol() - v - 1);
-			if (board.isInside(u, v) == 2 && board.getCell(u, v + moveDir) != ' ')
+			if ((board.isInside(u + moveDir.first, v + moveDir.second) != 2) || (board.isInside(u + moveDir.first, v + moveDir.second) == 2 && board.getCell(u + moveDir.first, v + moveDir.second) != ' ')){ // one of the block hit the other block -> move up/left/right accordingly
+				if (pos.second + special_I_shenanigans_is_so_peak > v) // need moving to the right
+						moveDir.second++;
+				else if (pos.second + special_I_shenanigans_is_so_peak < v) // need moving to the left
+						moveDir.second--;
+				else // move upward
+					moveDir.first--;
+			}
+		}
+		for (int i = 0; i < blocks[tempState].size(); i++){
+    		int u = pos.first + blocks[tempState][i].first + moveDir.first;
+    		int v = pos.second + blocks[tempState][i].second + moveDir.second;
+			if ((board.isInside(u, v) != 2) ||(board.isInside(u, v) == 2 && board.getCell(u, v) != ' ')) 
 				return;
 		}
-		move(0, moveDir, board);
+		move(moveDir.first, moveDir.second, board);
 
 		state++;
 		state %= blocks.size();
@@ -235,7 +245,7 @@ void Board::addShape(Tetromino* tetromino){
 
 class O_Shape : public Tetromino {
 public:
-    O_Shape(int x, int y): Tetromino(x, y){
+    O_Shape(int x = 0, int y = 0): Tetromino(x, y){
     	blocks.push_back({{0, 0}, {0, 1}, {1, 0}, {1, 1}});
 	}
 	char type()
@@ -249,7 +259,7 @@ public:
     I_Shape(int x = 0, int y = 0): Tetromino(x, y){
     	blocks.push_back({{0, -1}, {0, 0}, {0, 1}, {0, 2}});
     	blocks.push_back({{-1, 1}, {0, 1}, {1, 1}, {2, 1}});
-    	blocks.push_back({{1, -1}, {1, 0}, {1, 1}, {1, 2}});
+    	blocks.push_back({{1, 0}, {1, -1}, {1, 1}, {1, 2}});
     	blocks.push_back({{-1, 0}, {0, 0}, {1, 0}, {2, 0}});
 	}
 	char type()
@@ -359,7 +369,7 @@ public:
 					tempTetromino = new I_Shape;
 					break;
 				case 2: 
-					tempTetromino = new T_Shape;
+					tempTetromino = new O_Shape;
 					break;
 				case 3: 
 					tempTetromino = new S_Shape;
