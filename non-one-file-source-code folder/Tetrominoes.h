@@ -53,6 +53,7 @@ public:
 	bool collisionCheck(Board& board);
 	void rotate(Board& board);
     void display();
+	void clear();
 	virtual char type() = 0;
 };
 

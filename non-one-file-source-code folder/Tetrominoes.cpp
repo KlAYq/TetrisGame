@@ -23,6 +23,8 @@ void Board::display() const
 		}
 	}
 }
+
+
 int Board::isInside(int x, int y){
 	if (y < 0)
 		return -1; // outer left
@@ -110,7 +112,25 @@ void Tetromino::setPos(int x, int y){
 	pos.first = x;
 	pos.second = y;
 }
+
+void Tetromino::clear(){
+	for (int i = 0; i < blocks[state].size(); i++){
+		int u = pos.first + blocks[state][i].first;
+		int v = pos.second + blocks[state][i].second;
+		if (u < 4)
+			continue;
+		else 
+		{
+			if ((u + v) % 2 == 0)
+				drawBlock(colorMap['G'], u + BORDER_W, v + BORDER_L);
+			else
+				drawBlock(colorMap['W'], u + BORDER_W, v + BORDER_L);
+		}
+	}
+}
+
 void Tetromino::move(int offSetX, int offSetY, Board& board){
+	clear();
 	for (int i = 0; i < blocks[state].size(); i++){
 		int u = pos.first + blocks[state][i].first + offSetX;
 		int v = pos.second + blocks[state][i].second + offSetY;
@@ -120,6 +140,7 @@ void Tetromino::move(int offSetX, int offSetY, Board& board){
 	
 	pos.first += offSetX;
 	pos.second += offSetY;
+	display();
 }
 vector <pair<int, int> > Tetromino::getBlocks(){
 	return blocks[state];
@@ -162,9 +183,10 @@ void Tetromino::rotate(Board& board){
 		return;
 	}
 	move(moveDir.first, moveDir.second, board);
-
+	clear();
 	state++;
 	state %= blocks.size();
+	display();
 }
 void Tetromino::display(){
 	for (int i = 0; i < blocks[state].size(); i++){

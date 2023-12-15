@@ -55,7 +55,10 @@ void TetrisGame::updateGame() {
 		clearedlines = 0;
 	}
 	if (currentTetromino == NULL)
+	{
 		spawnTetromino(0, 5);
+		displayTetrominoQueue();
+	}
 
 	//Auto drop and clear lines
 	time_t now = time(0);
@@ -77,7 +80,6 @@ void TetrisGame::updateGame() {
 
 		nowtime = now;
 		currentTetromino->move(1, 0, board);
-		displayGame();
 		GoTo(16, 83);
 		cout << score;
 		GoTo(19, 83);
@@ -109,8 +111,6 @@ void TetrisGame::updateGame() {
 				currentTetromino->move(1, 0, board);
 			break;
 		}
-		displayTetrominoQueue();
-		displayGame();
 	}
 }
 
