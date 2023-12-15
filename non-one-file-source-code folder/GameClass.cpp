@@ -66,6 +66,7 @@ void TetrisGame::updateGame() {
 		if (currentTetromino->collisionCheck(board)){
 			//Merge current shape into board
 			board.addShape(currentTetromino);
+			board.display();
 
 			//Check for clear lines and update score
 			int newclearedlines = 0;

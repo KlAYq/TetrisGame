@@ -130,14 +130,13 @@ void Tetromino::clear(){
 }
 
 void Tetromino::move(int offSetX, int offSetY, Board& board){
-	clear();
 	for (int i = 0; i < blocks[state].size(); i++){
 		int u = pos.first + blocks[state][i].first + offSetX;
 		int v = pos.second + blocks[state][i].second + offSetY;
 		if (board.isInside(u, v) != 2 || board.getCell(u, v) != ' ')
 			return;
 	}
-	
+	clear();
 	pos.first += offSetX;
 	pos.second += offSetY;
 	display();
