@@ -109,12 +109,12 @@ void drawBlock(string color, int Y, int X)
     cout << Highlight(color, "   ");
 }
 
-// Draw non-colored squares (?)
-void drawBlock(string color, int Y, int X)
-{
-    GoTo(Y * 2, X * 3);
-    cout << Highlight(color, "   ");
-    GoTo(Y * 2 + 1, X * 3);
-    cout << Highlight(color, "   ");
-}
+//// Draw non-colored squares (?)
+//void drawBlock(string color, int Y, int X)
+//{
+//    GoTo(Y * 2, X * 3);
+//    cout << Highlight(color, "   ");
+//    GoTo(Y * 2 + 1, X * 3);
+//    cout << Highlight(color, "   ");
+//}
 

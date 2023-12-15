@@ -18,14 +18,9 @@ int main()
     // Initialize and run the Tetris game
     TetrisGame game(20, 10);
 	SetConsoleANSI();
-	game.drawMenu();
-	game.displayGame();
-	game.displayUI();
+//	game.GameInit();
+	game.drawHowToPlay();
     PlaySound(TEXT("sfx/Theme01.wav"), NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
-    while (true) {
-        game.updateGame();
-		if (game.gameOver())
-			break;
-    }
+    
     return 0;
 }

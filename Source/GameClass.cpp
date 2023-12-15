@@ -50,8 +50,10 @@ void TetrisGame::updateGame()
 		clearedlines = 0;
 	}
 	if (currentTetromino == NULL)
+	{
 		spawnTetromino(0, 5);
-
+		displayTetrominoQueue();
+	}
 	//Auto drop and clear lines
 	time_t now = time(0);
 	if (now - nowtime >= 1)
@@ -60,7 +62,7 @@ void TetrisGame::updateGame()
 		{
 			//Merge current shape into board
 			board.addShape(currentTetromino);
-
+			board.display();
 			//Check for clear lines and update score
 			int newclearedlines = 0;
 			board.checkClear(currentTetromino->getPos().first-3, newclearedlines);
@@ -74,7 +76,6 @@ void TetrisGame::updateGame()
 
 		nowtime = now;
 		currentTetromino->move(1, 0, board);
-		displayGame();
 		GoTo(16, 83);
 		cout << score;
 		GoTo(19, 83);
@@ -106,8 +107,6 @@ void TetrisGame::updateGame()
 				currentTetromino->move(1, 0, board);
 			break;
 		}
-		displayTetrominoQueue();
-		displayGame();
 	}
 }
 
@@ -175,7 +174,84 @@ void TetrisGame::displayUI() const
 
 }
 
-void TetrisGame::drawMenu() const
+void TetrisGame::drawHowToPlay() const{
+	for (int i = 0; i < 24; i++)
+		for (int j = 0; j < 38; j++)
+			if (i == 0 || i == 23)
+			{
+				drawBlock(colorMap['W'], i, j);
+			}
+			else if (j == 0 || j == 37)
+			{
+				drawBlock(colorMap['W'], i, j);	
+			}
+	
+	ifstream im("img/howtoplay.txt");
+	string imline;
+	int itline = 0;
+	while(getline(im, imline))
+	{
+		for (int i = 0; i < imline.length(); i++)
+			if (imline[i] == ' ')
+				drawBlock("000000", 14 + itline, 24 + i);
+			else
+				drawBlock(colorMap[char(imline[i])], 14 + itline, 24 + i);
+		itline++;
+	}
+	im.close();
+	
+	I_Shape(6, -6).display();
+	O_Shape(9, -6).display();
+	T_Shape(12, -6).display();
+	Z_Shape(6, -1).display();
+	S_Shape(9, -1).display();
+	L_Shape(12, -1).display();
+	J_Shape(15, -1).display();
+	
+	// Drawing animation
+	bool running = true;
+	time_t t1, t2 = time(0);
+	int it = 0;
+	while (running){
+		t1 = time(0);
+		if (kbhit()){
+			char input;
+			input = getch();
+			if (input == 13){
+				running = false;
+				break;
+			}
+		}
+		if (t1 - t2 >= 1){
+			ifstream imgf("img/howtoplay_" + to_string(it) + ".txt");
+			string line;
+			int iline = 0;
+			while(getline(imgf, line))
+			{
+				for (int i = 0; i < line.length(); i++)
+					if (line[i] == ' ')
+						drawBlock("000000", 3 + iline, 24 + i);
+					else
+						drawBlock(colorMap[char(line[i])], 3 + iline, 24 + i);
+				iline++;
+			}
+			imgf.close();
+			t2 = t1;
+			++it %= 8;
+		}
+	}
+	
+}
+
+void TetrisGame::drawCredits() const{
+	
+}
+
+void TetrisGame::drawGameOver() const{
+
+}
+
+int TetrisGame::drawMenu() const
 {
 	//Dramatic border effect
 	for (int i = 0; i < 24; i++)
@@ -250,10 +326,43 @@ void TetrisGame::drawMenu() const
 					  PlaySound(TEXT("sfx/Select.wav"), NULL, SND_ASYNC | SND_FILENAME); break;
 			default: break;
 		}
-	}
+		
+		for (int i = 1; i < 23; i++)
+			for (int j = 1; j < 32; j++)
+				drawBlock("000000", i, j);
 	
-	for (int i = 1; i < 23; i++)
-		for (int j = 1; j < 32; j++)
-			drawBlock("000000", i, j);
+	}
+	return option;
 }
 
+void TetrisGame::GameInit(){
+	bool game_running = true;
+	while (game_running){
+		int option = drawMenu();
+		switch (option){
+			case 0: 
+				displayGame();
+				displayUI();
+				starttime = time(0);
+				while (true) {
+		        	updateGame();
+					if (gameOver())
+						break;
+			    }
+			    // Game over screen
+			    drawGameOver();
+		    	break;
+		    case 1:
+		    	drawHowToPlay();
+		    	break;
+		    case 2:
+		    	drawCredits();
+		    	break;
+		    case 3:
+		    	game_running = false;
+		    	break;
+		    default:
+		    	break;
+		}	
+	}
+}

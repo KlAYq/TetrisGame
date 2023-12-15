@@ -18,7 +18,7 @@ private:
     Board board;
     Tetromino* currentTetromino;
 	vector <Tetromino*> tetrominoQueue;
-	const time_t starttime; 				//Start time
+	time_t starttime; 						//Start time
 	time_t nowtime; 						//Current time, only update once per second
 	int clearedlines;  						//Number of cleared lines in current level
 	int level;								//A level requires 2*level + 1 lines to be cleared
@@ -31,9 +31,13 @@ public:
 	bool gameOver();
     void updateGame();
     void displayTetrominoQueue() const;
+
     void displayGame() const;
 	void displayUI() const;
-	void drawMenu() const;
+	int drawMenu() const;
 	void drawHowToPlay() const;
 	void drawGameOver() const;
+	void drawCredits() const;
+	
+	void GameInit();
 };
