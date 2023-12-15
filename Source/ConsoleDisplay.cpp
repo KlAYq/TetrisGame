@@ -86,18 +86,9 @@ void DisableCtrButton(bool Close, bool Min, bool Max)
     HWND hWnd = GetConsoleWindow();
     HMENU hMenu = GetSystemMenu(hWnd, false);
 
-    if (Close == 1)
-    {
-        DeleteMenu(hMenu, SC_CLOSE, MF_BYCOMMAND);
-    }
-    if (Min == 1)
-    {
-        DeleteMenu(hMenu, SC_MINIMIZE, MF_BYCOMMAND);
-    }
-    if (Max == 1)
-    {
-        DeleteMenu(hMenu, SC_MAXIMIZE, MF_BYCOMMAND);
-    }
+    if (Close == 1) { DeleteMenu(hMenu, SC_CLOSE, MF_BYCOMMAND);    }
+    if (Min == 1)   { DeleteMenu(hMenu, SC_MINIMIZE, MF_BYCOMMAND); }
+    if (Max == 1)   { DeleteMenu(hMenu, SC_MAXIMIZE, MF_BYCOMMAND); }
 }
 
 // Draw colored squares
@@ -108,13 +99,3 @@ void drawBlock(string color, int Y, int X)
     GoTo(Y * 2 + 1, X * 3);
     cout << Highlight(color, "   ");
 }
-
-//// Draw non-colored squares (?)
-//void drawBlock(string color, int Y, int X)
-//{
-//    GoTo(Y * 2, X * 3);
-//    cout << Highlight(color, "   ");
-//    GoTo(Y * 2 + 1, X * 3);
-//    cout << Highlight(color, "   ");
-//}
-
