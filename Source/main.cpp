@@ -13,19 +13,19 @@ int main()
     ShowScrollbarOption(0);
     DisableCtrButton(0, 0, 1);
     SetConsoleTitle("Tetrizz");
-	srand(time(0)); 
+	srand(time(0));
 
     // Initialize and run the Tetris game
     TetrisGame game(20, 10);
 	SetConsoleANSI();
-//	game.drawMenu();
+	game.drawMenu();
 	game.displayGame();
 	game.displayUI();
+    PlaySound(TEXT("sfx/Theme01.wav"), NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
     while (true) {
         game.updateGame();
 		if (game.gameOver())
 			break;
     }
-
     return 0;
 }

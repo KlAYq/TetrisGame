@@ -69,7 +69,6 @@ void TetrisGame::updateGame()
 			//Delete current shape
 			delete currentTetromino;
 			currentTetromino = NULL;
-			//PlaySound(TEXT("sfx/DropSFX01.wav"), NULL, SND_ASYNC | SND_FILENAME);
 			return;
 		}
 
@@ -226,7 +225,8 @@ void TetrisGame::drawMenu() const
 	bool inMenuMode = true;
 	int option = 0;
 	
-	while(inMenuMode){		
+	while(inMenuMode)
+	{		
 		GoTo(30,45);
 		cout << "   ";
 		GoTo(32,45);
@@ -236,14 +236,18 @@ void TetrisGame::drawMenu() const
 		GoTo(36,45);
 		cout << "   ";
 		
-		GoTo(30 + 2*option, 45);
+		GoTo(30 + 2 * option, 45);
 		cout << "<<";
 		
 		char c = _getch();
-		switch (tolower(c)){
-			case 's': option++; option %= 4; break;
-			case 'w': option--; option = option < 0 ? 3 : option; break;
-			case 13: inMenuMode = false; break;
+		switch (tolower(c))
+		{
+			case 's': option++; option %= 4;
+					  PlaySound(TEXT("sfx/Select.wav"), NULL, SND_ASYNC | SND_FILENAME); break;
+			case 'w': option--; option = option < 0 ? 3 : option;
+					  PlaySound(TEXT("sfx/Select.wav"), NULL, SND_ASYNC | SND_FILENAME); break;
+			case 13:  inMenuMode = false;
+					  PlaySound(TEXT("sfx/Select.wav"), NULL, SND_ASYNC | SND_FILENAME); break;
 			default: break;
 		}
 	}
