@@ -15,7 +15,7 @@ int main() {
     // Initialize and run the Tetris game
     TetrisGame game(20, 10);
 	SetConsoleANSI();
-	game.drawMenu();
+//	game.drawMenu();
 	game.displayGame();
 	game.displayUI();
     while (true) {

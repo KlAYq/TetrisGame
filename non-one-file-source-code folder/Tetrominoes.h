@@ -42,7 +42,8 @@ protected:
     pair <int, int> pos;
     vector <vector <pair <int, int> > > blocks;
 public:
-	Tetromino(int& x, int& y);
+	Tetromino(int x, int y);
+	void setPos(int x, int y);
     void move(int offSetX, int offSetY, Board& board);
 	vector <pair<int, int> > getBlocks();
 	pair<int, int> getPos();

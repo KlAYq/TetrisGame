@@ -4,31 +4,37 @@
 TetrisGame::TetrisGame(int numRows, int numCols) : board(numRows, numCols), currentTetromino(nullptr), starttime(time(0)), clearedlines(0) {}
 
 void TetrisGame::spawnTetromino(int x, int y) {
-	int random = rand() % 7;
-	switch (random){
-		case 0:
-			currentTetromino = new T_Shape(x, y);
-			break;
-		case 1: 
-			currentTetromino = new I_Shape(x, y);
-			break;
-		case 2: 
-			currentTetromino = new T_Shape(x, y);
-			break;
-		case 3: 
-			currentTetromino = new S_Shape(x, y);
-			break;
-		case 4: 
-			currentTetromino = new Z_Shape(x, y);
-			break;
-		case 5: 
-			currentTetromino = new J_Shape(x, y);
-			break;
-		case 6: 
-			currentTetromino = new L_Shape(x, y);
-			break;	
-	}
-	
+	while (tetrominoQueue.size() < 3){
+			Tetromino* tempTetromino;
+			int random = rand() % 7;
+			switch (random){
+				case 0:
+					tempTetromino = new T_Shape;
+					break;
+				case 1: 
+					tempTetromino = new I_Shape;
+					break;
+				case 2: 
+					tempTetromino = new O_Shape;
+					break;
+				case 3: 
+					tempTetromino = new S_Shape;
+					break;
+				case 4: 
+					tempTetromino = new Z_Shape;
+					break;
+				case 5: 
+					tempTetromino = new J_Shape;
+					break;
+				case 6: 
+					tempTetromino = new L_Shape;
+					break;	
+			}
+			tetrominoQueue.push_back(tempTetromino);
+    	}
+		currentTetromino = tetrominoQueue[0];
+		currentTetromino->setPos(x, y);
+		tetrominoQueue.erase(tetrominoQueue.begin());
 }
 
 void TetrisGame::update_score(int newclearedlines) {
@@ -99,6 +105,7 @@ void TetrisGame::updateGame() {
 			break;
 		}
 		displayGame();
+		displayTetrominoQueue();
 	}
 }
 
@@ -108,8 +115,14 @@ void TetrisGame::displayGame() const {
     	currentTetromino->display();
 }
 
-void drawOne(){
-	
+void TetrisGame::displayTetrominoQueue(){
+	for (int i = 2; i < 4; i++)
+		for (int j = 26; j < 36; j++)
+			drawEmptyCell("000000", i, j);
+	for (int i = 0; i < tetrominoQueue.size(); i++){
+			tetrominoQueue[i]->setPos(5, 14 + 5 * i);
+			tetrominoQueue[i]->display();
+	}
 }
 
 void TetrisGame::displayUI() const {
@@ -129,11 +142,16 @@ void TetrisGame::displayUI() const {
 			else if (j == 0 || j == 37)
 				drawEmptyCell(colorMap['W'], i, j);	
 	
-	//Next piece
+	//Next piece - implemented else where
+	GoTo(10, 89);
+	cout << "Next block";
+	for (int i = 26 ; i < 38; i++)
+		drawEmptyCell(colorMap['W'], 6, i);
 	
 	//Time
 	
 	//Score
+
 }
 
 void TetrisGame::drawMenu() const {
