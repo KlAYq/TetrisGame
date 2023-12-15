@@ -223,6 +223,30 @@ void TetrisGame::drawHowToPlay() const
 	}
 	im.close();
 	
+	GoTo(8, 18);
+	cout << "I";
+	GoTo(13, 18);
+	cout << "O";
+	GoTo(19, 18);
+	cout << "T";
+	GoTo(7, 47);
+	cout << "Z";
+	GoTo(13, 47);
+	cout << "S";
+	GoTo(19, 47);
+	cout << "L";
+	GoTo(25, 47);
+	cout << "J";
+	GoTo(30, 24);
+	cout << "7 types of blocks.";
+	GoTo(31, 27);
+	cout << "(tet means 4)";
+	
+	GoTo(19, 70);
+	cout << "Form a line to remove them";
+	GoTo(43, 67);
+	cout << "Try not to fill the pieces up top";
+	
 	I_Shape(6, -6).display();
 	O_Shape(9, -6).display();
 	T_Shape(12, -6).display();
@@ -230,6 +254,9 @@ void TetrisGame::drawHowToPlay() const
 	S_Shape(9, -1).display();
 	L_Shape(12, -1).display();
 	J_Shape(15, -1).display();
+	
+	GoTo(43, 17);
+	cout << "<Press Enter to return to Main Menu>";
 	
 	// Drawing animation
 	bool running = true;
@@ -280,6 +307,22 @@ void TetrisGame::drawCredits() const{
 				drawBlock(colorMap['W'], i, j);	
 			}
 	
+	ifstream im("img/amongus.txt");
+	string imline;
+	int itline = 0;
+	while(getline(im, imline))
+	{
+		for (int i = 0; i < imline.length(); i++)
+			if (imline[i] == ' ')
+				drawBlock("000000", 3 + itline, 12 + i);
+			else if (imline[i] == '0')
+				drawBlock(colorMap['I'], 3 + itline, 12 + i);
+			else if (imline[i] == '1')
+				drawBlock("ff0000", 3 + itline, 12 + i);
+		itline++;
+	}
+	im.close();
+	
 	GoTo(12, 70);
 	cout << "Meet the creators:";
 	
@@ -290,18 +333,20 @@ void TetrisGame::drawCredits() const{
 	GoTo(16, 70);
 	cout << "22127258 - Le \"KLAY\" Tri Man";
 	GoTo(17, 70);
-	cout << "22127452 - Le \"Shadow\" Ngoc Vy";
+	cout << "22127452 - Le \"Shadow\" Ngoc Vi";
 	
 	
-	GoTo(19, 70);
-	cout << "Special thanks to the teachers: ";
 	GoTo(21, 70);
-	cout << "Mr. Bui Tien Len";
-	GoTo(22, 70);
-	cout << "Mr. Truong Tan Khoa";
+	cout << "Special thanks to the teachers: ";
 	GoTo(23, 70);
+	cout << "Mr. Bui Tien Len";
+	GoTo(24, 70);
+	cout << "Mr. Truong Tan Khoa";
+	GoTo(25, 70);
 	cout << "Mr. Le Thanh Phong";
 	
+	GoTo(43, 67);
+	cout << "<Press Enter to return to Main Menu>";
 	
 	char colorInputs[7] = "TOSJIL";
 	
