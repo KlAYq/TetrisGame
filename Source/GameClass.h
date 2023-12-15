@@ -25,7 +25,8 @@ private:
 	int score;
 public:
     TetrisGame(int numRows, int numCols);
-
+	void ResetGame();
+	
     void spawnTetromino(int x, int y);
 	void update_score(int newclearedlines);
 	bool gameOver();

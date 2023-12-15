@@ -119,6 +119,17 @@ void TetrisGame::displayGame() const
     displayTetrominoQueue();
 }
 
+void TetrisGame::ResetGame(){
+	board.ResetBoard();
+	while (tetrominoQueue.size()){
+		delete tetrominoQueue[0];
+		tetrominoQueue.erase(tetrominoQueue.begin());
+	}
+	if (currentTetromino)
+		delete currentTetromino;
+	currentTetromino = NULL;
+}
+
 void TetrisGame::displayTetrominoQueue() const
 {
 	for (int i = 2; i < 4; i++)
@@ -446,6 +457,7 @@ void TetrisGame::GameInit()
 		switch (option)
 		{
 			case 0: 
+				ResetGame();
 				displayGame();
 				displayUI();
 				starttime = time(0);

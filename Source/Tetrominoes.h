@@ -25,6 +25,7 @@ public:
     Board(int numRows, int numCols);
 
 	void display() const;
+	void ResetBoard();
 	int isInside(int x, int y);
 	int getRow();
 	int getCol();

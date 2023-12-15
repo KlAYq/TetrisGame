@@ -92,6 +92,9 @@ void Board::addShape(Tetromino* tetromino)
 	}
 }
 
+void Board::ResetBoard(){
+	grid = vector<vector<char>>(rows + 4, vector<char>(cols, ' '));
+}
 
 // Tetromino class represents a single Tetris piece
 Tetromino::Tetromino(int x, int y)
