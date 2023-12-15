@@ -167,7 +167,7 @@ void Tetromino::display(){
 }
 
 O_Shape::O_Shape(int x = 0, int y = 0): Tetromino(x, y){
-	blocks.push_back({{0, 0}, {0, 1}, {1, 0}, {1, 1}});
+	blocks.push_back({{0, 0}, {-1, 0}, {0, -1}, {-1, -1}});
 }
 char O_Shape::type()
 {
