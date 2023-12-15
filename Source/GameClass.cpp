@@ -174,17 +174,14 @@ void TetrisGame::displayUI() const
 
 }
 
-void TetrisGame::drawHowToPlay() const{
+void TetrisGame::drawHowToPlay() const
+{
 	for (int i = 0; i < 24; i++)
 		for (int j = 0; j < 38; j++)
 			if (i == 0 || i == 23)
-			{
-				drawBlock(colorMap['W'], i, j);
-			}
+			{ drawBlock(colorMap['W'], i, j); }
 			else if (j == 0 || j == 37)
-			{
-				drawBlock(colorMap['W'], i, j);	
-			}
+			{ drawBlock(colorMap['W'], i, j); }
 	
 	ifstream im("img/howtoplay.txt");
 	string imline;
@@ -212,7 +209,8 @@ void TetrisGame::drawHowToPlay() const{
 	bool running = true;
 	time_t t1, t2 = time(0);
 	int it = 0;
-	while (running){
+	while (running)
+	{
 		t1 = time(0);
 		if (kbhit()){
 			char input;
