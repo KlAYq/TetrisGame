@@ -333,34 +333,28 @@ int TetrisGame::drawMenu() const
 	return option;
 }
 
-void TetrisGame::GameInit(){
+void TetrisGame::GameInit()
+{
 	bool game_running = true;
-	while (game_running){
+	while (game_running)
+	{
 		int option = drawMenu();
-		switch (option){
+		switch (option)
+		{
 			case 0: 
 				displayGame();
 				displayUI();
 				starttime = time(0);
 				while (true) {
 		        	updateGame();
-					if (gameOver())
-						break;
+					if (gameOver()) break;
 			    }
 			    // Game over screen
-			    drawGameOver();
-		    	break;
-		    case 1:
-		    	drawHowToPlay();
-		    	break;
-		    case 2:
-		    	drawCredits();
-		    	break;
-		    case 3:
-		    	game_running = false;
-		    	break;
-		    default:
-		    	break;
+			    drawGameOver();	break;
+		    case 1: drawHowToPlay(); break;
+		    case 2: drawCredits(); break;
+		    case 3: game_running = false; break;
+		    default: break;
 		}	
 	}
 }
