@@ -24,10 +24,10 @@ void TetrisGame::spawnTetromino(int x, int y)
 				case 6: tempTetromino = new L_Shape; break;	
 			}
 			tetrominoQueue.push_back(tempTetromino);
-    	}
-		currentTetromino = tetrominoQueue[0];
-		currentTetromino->setPos(x, y);
-		tetrominoQueue.erase(tetrominoQueue.begin());
+    }
+	currentTetromino = tetrominoQueue[0];
+	currentTetromino->setPos(x, y);
+	tetrominoQueue.erase(tetrominoQueue.begin());
 }
 
 void TetrisGame::update_score(int newclearedlines)
