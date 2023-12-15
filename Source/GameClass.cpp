@@ -65,7 +65,7 @@ void TetrisGame::updateGame()
 			board.display();
 			//Check for clear lines and update score
 			int newclearedlines = 0;
-			board.checkClear(currentTetromino->getPos().first-3, newclearedlines);
+			board.checkClear(currentTetromino->getPos().first - 3, newclearedlines);
 			update_score(newclearedlines);
 
 			//Delete current shape
