@@ -66,7 +66,7 @@ void TetrisGame::updateGame()
 			board.display();
 			//Check for clear lines and update score
 			int newclearedlines = 0;
-			board.checkClear(currentTetromino->getPos().first-3, newclearedlines);
+			board.checkClear(currentTetromino->getPos().first - 3, newclearedlines);
 			update_score(newclearedlines);
 			board.display();
 			//Delete current shape
@@ -189,17 +189,14 @@ void TetrisGame::displayUI() const
 	imgf.close();
 }
 
-void TetrisGame::drawHowToPlay() const{
+void TetrisGame::drawHowToPlay() const
+{
 	for (int i = 0; i < 24; i++)
 		for (int j = 0; j < 38; j++)
 			if (i == 0 || i == 23)
-			{
-				drawBlock(colorMap['W'], i, j);
-			}
+			{ drawBlock(colorMap['W'], i, j); }
 			else if (j == 0 || j == 37)
-			{
-				drawBlock(colorMap['W'], i, j);	
-			}
+			{ drawBlock(colorMap['W'], i, j); }
 	
 	ifstream im("img/howtoplay.txt");
 	string imline;
@@ -227,7 +224,8 @@ void TetrisGame::drawHowToPlay() const{
 	bool running = true;
 	time_t t1, t2 = time(0);
 	int it = 0;
-	while (running){
+	while (running)
+	{
 		t1 = time(0);
 		if (kbhit()){
 			char input;
@@ -439,35 +437,28 @@ int TetrisGame::drawMenu() const
 	return option;
 }
 
-void TetrisGame::GameInit(){
+void TetrisGame::GameInit()
+{
 	bool game_running = true;
 	while (game_running){
 		system("cls");
 		int option = drawMenu();
-		switch (option){
+		switch (option)
+		{
 			case 0: 
 				displayGame();
 				displayUI();
 				starttime = time(0);
 				while (true) {
 		        	updateGame();
-					if (gameOver())
-						break;
+					if (gameOver()) break;
 			    }
 			    // Game over screen
-			    drawGameOver();
-		    	break;
-		    case 1:
-		    	drawHowToPlay();
-		    	break;
-		    case 2:
-		    	drawCredits();
-		    	break;
-		    case 3:
-		    	game_running = false;
-		    	break;
-		    default:
-		    	break;
+			    drawGameOver();	break;
+		    case 1: drawHowToPlay(); break;
+		    case 2: drawCredits(); break;
+		    case 3: game_running = false; break;
+		    default: break;
 		}	
 	}
 }
