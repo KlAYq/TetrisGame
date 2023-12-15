@@ -39,7 +39,7 @@ void TetrisGame::update_score(int newclearedlines)
 
 bool TetrisGame::gameOver()
 {
-	return !board.isValid() || (nowtime - starttime >= 120);
+	return !board.isValid() || (nowtime - starttime >= 10);
 }
 
 void TetrisGame::updateGame()
@@ -52,6 +52,7 @@ void TetrisGame::updateGame()
 	if (currentTetromino == NULL)
 	{
 		spawnTetromino(0, 5);
+		currentTetromino->display();
 		displayTetrominoQueue();
 	}
 	//Auto drop and clear lines
@@ -67,7 +68,7 @@ void TetrisGame::updateGame()
 			int newclearedlines = 0;
 			board.checkClear(currentTetromino->getPos().first-3, newclearedlines);
 			update_score(newclearedlines);
-
+			board.display();
 			//Delete current shape
 			delete currentTetromino;
 			currentTetromino = NULL;
@@ -156,7 +157,7 @@ void TetrisGame::displayUI() const
 	for (int i = 26 ; i < 38; i++)
 		drawBlock(colorMap['W'], 6, i);
 	
-	//Time
+	//Controls
 	GoTo(15, 83);
 	cout << "Current Score: ";
 	GoTo(18, 83);
@@ -170,8 +171,22 @@ void TetrisGame::displayUI() const
 	GoTo(28, 83);
 	cout << "[S] - Drop block";
 	
-	//Score
-
+	char colorInputs[7] = "TOSJIL";
+	
+	ifstream imgf("img/vlogo.txt");
+	string line;
+	int iline = 0;
+	int r = rand() % 6;
+	while(getline(imgf, line))
+	{
+		for (int i = 0; i < line.length(); i++)
+			if (line[i] == ' ')
+				drawBlock("000000", 3 + iline, 2 + i);
+			else
+				drawBlock(colorMap[colorInputs[(int(line[i] - '1') + r) % 6]], 3 + iline, 2 + i);
+		iline++;
+	}
+	imgf.close();
 }
 
 void TetrisGame::drawHowToPlay() const{
@@ -245,10 +260,100 @@ void TetrisGame::drawHowToPlay() const{
 
 void TetrisGame::drawCredits() const{
 	
+	for (int i = 0; i < 24; i++)
+		for (int j = 0; j < 38; j++)
+			if (i == 0 || i == 23)
+			{
+				drawBlock(colorMap['W'], i, j);
+			}
+			else if (j == 0 || j == 37)
+			{
+				drawBlock(colorMap['W'], i, j);	
+			}
+	
+	GoTo(12, 70);
+	cout << "Meet the creators:";
+	
+	GoTo(14, 70);
+	cout << "22127028 - Ha \"KanCh\" Gia Bao";
+	GoTo(15, 70);
+	cout << "22127200 - Vo \"FakeMonika\" Dang Khoa";
+	GoTo(16, 70);
+	cout << "22127258 - Le \"KLAY\" Tri Man";
+	GoTo(17, 70);
+	cout << "22127452 - Le \"Shadow\" Ngoc Vy";
+	
+	
+	GoTo(19, 70);
+	cout << "Special thanks to the teachers: ";
+	GoTo(21, 70);
+	cout << "Mr. Bui Tien Len";
+	GoTo(22, 70);
+	cout << "Mr. Truong Tan Khoa";
+	GoTo(23, 70);
+	cout << "Mr. Le Thanh Phong";
+	
+	
+	char colorInputs[7] = "TOSJIL";
+	
+	bool running = true;
+	time_t t1, t2 = time(0);
+	int it = 0;
+	while (running){
+		t1 = time(0);
+		if (kbhit()){
+			char input;
+			input = getch();
+			if (input == 13){
+				running = false;
+				break;
+			}
+		}
+		if (t1 - t2 >= 1){
+			ifstream imgf("img/vlogo.txt");
+			string line;
+			int iline = 0;
+			while(getline(imgf, line))
+			{
+				for (int i = 0; i < line.length(); i++)
+					if (line[i] == ' ')
+						drawBlock("000000", 3 + iline, 2 + i);
+					else
+						drawBlock(colorMap[colorInputs[(int(line[i] - '1') + it) % 6]], 3 + iline, 2 + i);
+				iline++;
+			}
+			imgf.close();
+			t2 = t1;
+			++it %= 6;
+		}
+	}
 }
 
 void TetrisGame::drawGameOver() const{
-
+	GoTo(20, 83);
+	cout << "Game over!";
+	
+	ifstream imgf("img/vlogo.txt");
+	string line;
+	int iline = 0;
+	while(getline(imgf, line))
+	{
+		for (int i = 0; i < line.length(); i++)
+			if (line[i] == ' ')
+				drawBlock("000000", 3 + iline, 2 + i);
+			else
+				drawBlock("ff0000", 3 + iline, 2 + i);
+		iline++;
+	}
+	imgf.close();
+	
+	Sleep(2000);
+	for (int i = 21; i >= 2; i--){
+		Sleep(25);
+		for (int j = 14; j < 24; j++)
+			drawBlock("000000", i, j);
+	}
+	Sleep(2000);
 }
 
 int TetrisGame::drawMenu() const
@@ -327,17 +432,17 @@ int TetrisGame::drawMenu() const
 			default: break;
 		}
 		
-		for (int i = 1; i < 23; i++)
-			for (int j = 1; j < 32; j++)
-				drawBlock("000000", i, j);
-	
 	}
+	for (int i = 1; i < 23; i++)
+		for (int j = 1; j < 32; j++)
+			drawBlock("000000", i, j);
 	return option;
 }
 
 void TetrisGame::GameInit(){
 	bool game_running = true;
 	while (game_running){
+		system("cls");
 		int option = drawMenu();
 		switch (option){
 			case 0: 
