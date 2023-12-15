@@ -160,7 +160,7 @@ protected:
     pair <int, int> pos;
     vector <vector <pair <int, int> > > blocks;
 public:
-	Tetromino(int& x, int& y){
+	Tetromino(int x, int y){
 		state = 0;
 		pos.first = x; 
 		pos.second = y;
@@ -216,6 +216,10 @@ public:
     		drawBlock(colorMap[type()], u, v);
 		}
 	};
+	void setPos(int x, int y){
+		pos.first = x;
+		pos.second = y;
+	}
 	virtual char type() = 0;
 };
 
@@ -242,7 +246,7 @@ public:
 
 class I_Shape : public Tetromino {
 public:
-    I_Shape(int x, int y): Tetromino(x, y){
+    I_Shape(int x = 0, int y = 0): Tetromino(x, y){
     	blocks.push_back({{0, -1}, {0, 0}, {0, 1}, {0, 2}});
     	blocks.push_back({{-1, 1}, {0, 1}, {1, 1}, {2, 1}});
     	blocks.push_back({{1, -1}, {1, 0}, {1, 1}, {1, 2}});
@@ -256,7 +260,7 @@ public:
 
 class T_Shape : public Tetromino {
 public: 
-    T_Shape(int x, int y): Tetromino(x, y){
+    T_Shape(int x = 0, int y = 0): Tetromino(x, y){
     	blocks.push_back({{0, 0}, {-1, 0}, {0, -1}, {0, 1}});
     	blocks.push_back({{0, 0}, {0, 1}, {-1, 0}, {1, 0}});
     	blocks.push_back({{0, 0}, {0, -1}, {0, 1}, {1, 0}});
@@ -270,7 +274,7 @@ public:
 
 class S_Shape : public Tetromino {
 public:
-    S_Shape(int x, int y): Tetromino(x, y){
+    S_Shape(int x = 0, int y = 0): Tetromino(x, y){
     	blocks.push_back({{0, 0}, {0, -1}, {-1, 0}, {-1, 1}});
     	blocks.push_back({{0, 0}, {-1, 0}, {0, 1}, {1, 1}});
     	blocks.push_back({{0, 0}, {0, 1}, {1, -1}, {1, 0}});
@@ -284,7 +288,7 @@ public:
 
 class Z_Shape : public Tetromino {
 public:
-    Z_Shape(int x, int y): Tetromino(x, y){
+    Z_Shape(int x = 0, int y = 0): Tetromino(x, y){
     	blocks.push_back({{0, 0}, {-1, -1}, {-1, 0}, {0, 1}});
     	blocks.push_back({{0, 0}, {-1, 1}, {0, 1}, {1, 0}});
     	blocks.push_back({{0, 0}, {0, -1}, {1, 0}, {1, 1}});
@@ -298,7 +302,7 @@ public:
 
 class J_Shape : public Tetromino {
 public:
-    J_Shape(int x, int y): Tetromino(x, y){
+    J_Shape(int x = 0, int y = 0): Tetromino(x, y){
     	blocks.push_back({{0, 0}, {-1, -1}, {0, -1}, {0, 1}});
     	blocks.push_back({{0, 0}, {-1, 1}, {-1, 0}, {1, 0}});
     	blocks.push_back({{0, 0}, {0, -1}, {0, 1}, {1, 1}});
@@ -312,7 +316,7 @@ public:
 
 class L_Shape : public Tetromino {
 public:
-    L_Shape(int x, int y): Tetromino(x, y){
+    L_Shape(int x = 0, int y = 0): Tetromino(x, y){
     	blocks.push_back({{0, 0}, {0, -1}, {0, 1}, {-1, 1}});
     	blocks.push_back({{0, 0}, {-1, 0}, {1, 0}, {1, 1}});
     	blocks.push_back({{0, 0}, {1, -1}, {0, -1}, {0, 1}});
@@ -328,6 +332,7 @@ class TetrisGame {
 private:
     Board board;
     Tetromino* currentTetromino;
+	vector <Tetromino*> tetrominoQueue;
 	const time_t starttime; //Start time
 	time_t nowtime; //Current time, only update once per second
 	int clearedlines;  //Number of cleared lines in current level
@@ -336,35 +341,45 @@ private:
 
 public:
     TetrisGame(int numRows, int numCols) : board(numRows, numCols), currentTetromino(nullptr), starttime(time(0)), clearedlines(0) {}
-
-    void spawnTetromino(int x, int y) {
-    	int random = rand() % 7;
-    	switch (random){
-    		case 0:
-    			currentTetromino = new T_Shape(x, y);
-    			break;
-    		case 1: 
-    			currentTetromino = new I_Shape(x, y);
-    			break;
-    		case 2: 
-    			currentTetromino = new T_Shape(x, y);
-    			break;
-    		case 3: 
-    			currentTetromino = new S_Shape(x, y);
-    			break;
-    		case 4: 
-    			currentTetromino = new Z_Shape(x, y);
-    			break;
-    		case 5: 
-    			currentTetromino = new J_Shape(x, y);
-    			break;
-    		case 6: 
-    			currentTetromino = new L_Shape(x, y);
-    			break;	
+	void displayTetrominoQueue(){
+		for (int i = 0; i < tetrominoQueue.size(); i++){
+			tetrominoQueue[i]->setPos(10*i + 5, 30);
+			tetrominoQueue[i]->display();
 		}
-    	
-    }
-
+	}
+    void spawnTetromino(int x, int y) {
+    	while (tetrominoQueue.size() < 3){
+			Tetromino* tempTetromino;
+			int random = rand() % 7;
+			switch (random){
+				case 0:
+					tempTetromino = new T_Shape;
+					break;
+				case 1: 
+					tempTetromino = new I_Shape;
+					break;
+				case 2: 
+					tempTetromino = new T_Shape;
+					break;
+				case 3: 
+					tempTetromino = new S_Shape;
+					break;
+				case 4: 
+					tempTetromino = new Z_Shape;
+					break;
+				case 5: 
+					tempTetromino = new J_Shape;
+					break;
+				case 6: 
+					tempTetromino = new L_Shape;
+					break;	
+			}
+			tetrominoQueue.push_back(tempTetromino);
+    	}
+		currentTetromino = tetrominoQueue[0];
+		currentTetromino->setPos(x, y);
+		tetrominoQueue.erase(tetrominoQueue.begin());
+	}
 	void update_score(int newclearedlines) {
 		clearedlines += newclearedlines;
 		if (newclearedlines >= 1)
@@ -400,6 +415,7 @@ public:
 				//Delete current shape
 				delete currentTetromino;
 				currentTetromino = NULL;
+				
 				return;
 			}
 
@@ -433,6 +449,7 @@ public:
 				break;
 			}
 			displayGame();
+			displayTetrominoQueue();
 		}
     }
 
