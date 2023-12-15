@@ -18,13 +18,13 @@ private:
 	const time_t starttime; //Start time
 	time_t nowtime; //Current time, only update once per second
 	int clearedlines;  //Number of cleared lines in current level
-	int score; 
+	int score;
 	int level;	//A level requires 2*level + 1 lines to be cleared
 public:
     TetrisGame(int numRows, int numCols);
 
     void spawnTetromino(int x, int y);
-    void displayTetrominoQueue();
+    void displayTetrominoQueue() const;
 	void update_score(int newclearedlines);
 	bool gameOver();
     void updateGame();
@@ -32,6 +32,7 @@ public:
 	void displayUI() const;
 	void drawMenu() const;
 	void drawHowToPlay() const;
+	void drawGameOver() const;
 };
 
 

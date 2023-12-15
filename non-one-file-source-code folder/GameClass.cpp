@@ -78,9 +78,14 @@ void TetrisGame::updateGame() {
 		nowtime = now;
 		currentTetromino->move(1, 0, board);
 		displayGame();
+		GoTo(16, 83);
+		cout << score;
+		GoTo(19, 83);
+		cout << time(NULL) - starttime << "s";
 	}
 
 	char input;
+	
 	if (kbhit())
 	{
 		input = getch();
@@ -104,8 +109,8 @@ void TetrisGame::updateGame() {
 				currentTetromino->move(1, 0, board);
 			break;
 		}
-		displayGame();
 		displayTetrominoQueue();
+		displayGame();
 	}
 }
 
@@ -113,9 +118,10 @@ void TetrisGame::displayGame() const {
     board.display();
     if (currentTetromino != NULL)
     	currentTetromino->display();
+    displayTetrominoQueue();
 }
 
-void TetrisGame::displayTetrominoQueue(){
+void TetrisGame::displayTetrominoQueue() const{
 	for (int i = 2; i < 4; i++)
 		for (int j = 26; j < 36; j++)
 			drawEmptyCell("000000", i, j);
@@ -143,12 +149,26 @@ void TetrisGame::displayUI() const {
 				drawEmptyCell(colorMap['W'], i, j);	
 	
 	//Next piece - implemented else where
-	GoTo(10, 89);
+	GoTo(9, 83);
+	cout << "^";
+	GoTo(10, 83);
 	cout << "Next block";
 	for (int i = 26 ; i < 38; i++)
 		drawEmptyCell(colorMap['W'], 6, i);
 	
 	//Time
+	GoTo(15, 83);
+	cout << "Current Score: ";
+	GoTo(18, 83);
+	cout << "Time: ";
+	GoTo(22, 83);
+	cout << "[A] - Move Left";
+	GoTo(24, 83);
+	cout << "[D] - Move Right";
+	GoTo(26, 83);
+	cout << "[W] - Spin";
+	GoTo(28, 83);
+	cout << "[S] - Drop block";
 	
 	//Score
 
@@ -159,11 +179,11 @@ void TetrisGame::drawMenu() const {
 	for (int i = 0; i < 24; i++)
 		for (int j = 0; j < 38; j++)
 			if (i == 0 || i == 23){
-				Sleep(25);
+				Sleep(15);
 				drawEmptyCell(colorMap['W'], i, j);
 			}
 			else if (j == 0 || j == 37){
-				Sleep(25);
+				Sleep(15);
 				drawEmptyCell(colorMap['W'], i, j);	
 			}
 	
@@ -173,7 +193,7 @@ void TetrisGame::drawMenu() const {
 	string line;
 	int iline = 0;
 	while(getline(logo, line)){
-		Sleep(25);
+		Sleep(15);
 		for (int i = 0; i < line.length(); i++)
 			if (line[i] == ' ')
 				drawEmptyCell("000000", 2 + iline, 4 + i);
@@ -184,10 +204,43 @@ void TetrisGame::drawMenu() const {
 	logo.close();
 	//Buttons
 	
-	GoTo(30,50);
+	GoTo(28,30);
+	cout << "Welcome!";
 	
-	cout << "Press Enter to play";
-	_getch();
+	GoTo(30,30);
+	cout << "<START GAME>";
+	GoTo(32,30);
+	cout << "<HOW TO PLAY>";
+	GoTo(34,30);
+	cout << "<MORE>";
+	GoTo(36,30);
+	cout << "<QUIT>";
+	
+	
+	bool inMenuMode = true;
+	int option = 0;
+	
+	while(inMenuMode){		
+		GoTo(30,45);
+		cout << "   ";
+		GoTo(32,45);
+		cout << "   ";
+		GoTo(34,45);
+		cout << "   ";
+		GoTo(36,45);
+		cout << "   ";
+		
+		GoTo(30 + 2*option, 45);
+		cout << "<<";
+		
+		char c = _getch();
+		switch (tolower(c)){
+			case 's': option++; option %= 4; break;
+			case 'w': option--; option = option < 0 ? 3 : option; break;
+			case 13: inMenuMode = false; break;
+			default: break;
+		}
+	}
 	
 	for (int i = 1; i < 23; i++)
 		for (int j = 1; j < 32; j++)
