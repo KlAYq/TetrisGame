@@ -10,6 +10,7 @@ int main() {
     DisableResizeWindow();
     ShowScrollbarOption(0);
     DisableCtrButton(0, 0, 1);
+    ShowConsoleCursor(false);
     SetConsoleTitle("Tetrizz");
 	srand(time(0)); 
     // Initialize and run the Tetris game

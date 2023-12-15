@@ -110,7 +110,7 @@ void drawBlock(string color, int Y, int X)
 }
 
 // Draw non-colored squares (?)
-void drawEmptyCell(string color, int Y, int X)
+void drawBlock(string color, int Y, int X)
 {
     GoTo(Y * 2, X * 3);
     cout << Highlight(color, "   ");

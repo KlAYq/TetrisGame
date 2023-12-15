@@ -6,6 +6,8 @@
 //#include <utility>
 #include <conio.h>
 #include <windows.h>
+#include <unistd.h>
+
 
 #define BORDER_W -2 //
 #define BORDER_L 14  //6
@@ -27,6 +29,7 @@ public:
 	int isInside(int x, int y);
 	int getRow();
 	int getCol();
+	void clearSFX(int x);
 	void clearRow(int x);
 	bool checkClear(int pos, int &lines);
 	char getCell(int x, int y);

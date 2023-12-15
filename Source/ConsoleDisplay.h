@@ -22,4 +22,4 @@ void DisableResizeWindow(); 						   //Locks the dimensions of the console
 void ShowScrollbarOption(BOOL Show);                   //Show scrollbar or not
 void DisableCtrButton(bool Close, bool Min, bool Max); //Disable expand, control buttons
 void drawBlock(string color, int Y, int X);
-void drawEmptyCell(string color, int Y, int X);
+void drawBlock(string color, int Y, int X);

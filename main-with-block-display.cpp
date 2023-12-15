@@ -60,7 +60,7 @@ void drawBlock(string color, int Y, int X)
     cout << Highlight(color, "   ");
 }
 
-void drawEmptyCell(string color, int Y, int X)
+void drawBlock(string color, int Y, int X)
 {
     GoTo(Y * 2, X * 3);
     cout << Highlight(color, "   ");
@@ -90,9 +90,9 @@ public:
 				else
 				{
 					if ((i + j) % 2 != 0 || i < 4)
-						drawEmptyCell(colorMap['W'], i, j);
+						drawBlock(colorMap['W'], i, j);
 					else
-						drawEmptyCell(colorMap['G'], i, j);
+						drawBlock(colorMap['G'], i, j);
 				}
 			}
 		}

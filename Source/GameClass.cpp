@@ -124,7 +124,7 @@ void TetrisGame::displayTetrominoQueue() const
 {
 	for (int i = 2; i < 4; i++)
 		for (int j = 26; j < 36; j++)
-			drawEmptyCell("000000", i, j);
+			drawBlock("000000", i, j);
 	for (int i = 0; i < tetrominoQueue.size(); i++)
 	{
 			tetrominoQueue[i]->setPos(5, 14 + 5 * i);
@@ -250,6 +250,6 @@ void TetrisGame::drawMenu() const
 	
 	for (int i = 1; i < 23; i++)
 		for (int j = 1; j < 32; j++)
-			drawEmptyCell("000000", i, j);
+			drawBlock("000000", i, j);
 }
 

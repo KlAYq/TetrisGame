@@ -16,9 +16,9 @@ void Board::display() const
 			else
 			{
 				if ((i + j) % 2 != 0 || i < 4)
-					drawEmptyCell(colorMap['W'], i + BORDER_W, j + BORDER_L);
+					drawBlock(colorMap['W'], i + BORDER_W, j + BORDER_L);
 				else
-					drawEmptyCell(colorMap['G'], i + BORDER_W, j + BORDER_L);
+					drawBlock(colorMap['G'], i + BORDER_W, j + BORDER_L);
 			}
 		}
 	}
@@ -39,7 +39,18 @@ int Board::getRow(){
 int Board::getCol(){
 	return cols;
 }
+
+void Board::clearSFX(int x)
+{
+	for (int j = 0; j < cols; j++)
+	{
+		drawShadedBlock(colorMap[grid[x][j]], x + BORDER_W, j + BORDER_L);
+	}
+	sleep(1);
+}
+
 void Board::clearRow(int x){
+	clearSFX(x);
 	for (int j = 0; j < cols; j++)
 		grid[x][j] = ' ';
 		
@@ -193,8 +204,6 @@ char T_Shape::type()
 {
 	return 'T';
 }
-
-
 
 S_Shape::S_Shape(int x = 0, int y = 0): Tetromino(x, y){
 	blocks.push_back({{0, 0}, {0, -1}, {-1, 0}, {-1, 1}});

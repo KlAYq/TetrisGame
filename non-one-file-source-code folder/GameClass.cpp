@@ -124,7 +124,7 @@ void TetrisGame::displayGame() const {
 void TetrisGame::displayTetrominoQueue() const{
 	for (int i = 2; i < 4; i++)
 		for (int j = 26; j < 36; j++)
-			drawEmptyCell("000000", i, j);
+			drawBlock("000000", i, j);
 	for (int i = 0; i < tetrominoQueue.size(); i++){
 			tetrominoQueue[i]->setPos(5, 14 + 5 * i);
 			tetrominoQueue[i]->display();
@@ -136,17 +136,17 @@ void TetrisGame::displayUI() const {
 	for (int i = BORDER_W + 2; i < BORDER_W + 26; i++)
 		for (int j = BORDER_L - 2; j < BORDER_L + 12; j++)
 			if (i == BORDER_W + 2|| i == BORDER_W + 25)
-				drawEmptyCell(colorMap['W'], i, j);
+				drawBlock(colorMap['W'], i, j);
 			else if (j == BORDER_L - 2|| j == BORDER_L + 11)
-				drawEmptyCell(colorMap['W'], i, j);
+				drawBlock(colorMap['W'], i, j);
 				
 	// Draw game border
 	for (int i = 0; i < 24; i++)
 		for (int j = 0; j < 38; j++)
 			if (i == 0 || i == 23)
-				drawEmptyCell(colorMap['W'], i, j);
+				drawBlock(colorMap['W'], i, j);
 			else if (j == 0 || j == 37)
-				drawEmptyCell(colorMap['W'], i, j);	
+				drawBlock(colorMap['W'], i, j);	
 	
 	//Next piece - implemented else where
 	GoTo(9, 83);
@@ -154,7 +154,7 @@ void TetrisGame::displayUI() const {
 	GoTo(10, 83);
 	cout << "Next block";
 	for (int i = 26 ; i < 38; i++)
-		drawEmptyCell(colorMap['W'], 6, i);
+		drawBlock(colorMap['W'], 6, i);
 	
 	//Time
 	GoTo(15, 83);
@@ -180,11 +180,11 @@ void TetrisGame::drawMenu() const {
 		for (int j = 0; j < 38; j++)
 			if (i == 0 || i == 23){
 				Sleep(15);
-				drawEmptyCell(colorMap['W'], i, j);
+				drawBlock(colorMap['W'], i, j);
 			}
 			else if (j == 0 || j == 37){
 				Sleep(15);
-				drawEmptyCell(colorMap['W'], i, j);	
+				drawBlock(colorMap['W'], i, j);	
 			}
 	
 	//Game logo
@@ -196,7 +196,7 @@ void TetrisGame::drawMenu() const {
 		Sleep(15);
 		for (int i = 0; i < line.length(); i++)
 			if (line[i] == ' ')
-				drawEmptyCell("000000", 2 + iline, 4 + i);
+				drawBlock("000000", 2 + iline, 4 + i);
 			else
 				drawBlock(colorMap[char(line[i])], 2 + iline, 4 + i);
 		iline++;
@@ -244,6 +244,6 @@ void TetrisGame::drawMenu() const {
 	
 	for (int i = 1; i < 23; i++)
 		for (int j = 1; j < 32; j++)
-			drawEmptyCell("000000", i, j);
+			drawBlock("000000", i, j);
 }
 

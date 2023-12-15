@@ -19,9 +19,9 @@ void Board::display() const
 			else
 			{
 				if ((i + j) % 2 != 0 || i < 4)
-					drawEmptyCell(colorMap['W'], i + BORDER_W, j + BORDER_L);
+					drawBlock(colorMap['W'], i + BORDER_W, j + BORDER_L);
 				else
-					drawEmptyCell(colorMap['G'], i + BORDER_W, j + BORDER_L);
+					drawBlock(colorMap['G'], i + BORDER_W, j + BORDER_L);
 			}
 		}
 	}
