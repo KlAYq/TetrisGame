@@ -17,7 +17,7 @@ void Board::display() const
 				drawBlock(colorMap[grid[i][j]], i + BORDER_W, j + BORDER_L);
 			else
 			{
-				if ((i + j) % 2 != 0 || i < 4)
+				if ((i + j) % 2 != 0)
 					drawBlock(colorMap['W'], i + BORDER_W, j + BORDER_L);
 				else
 					drawBlock(colorMap['G'], i + BORDER_W, j + BORDER_L);
@@ -40,6 +40,7 @@ int Board::getCol() { return cols; }
 
 void Board::clearRow(int x)
 {
+	clearSFX(x);
 	for (int j = 0; j < cols; j++)
 		grid[x][j] = ' ';
 		
@@ -95,3 +96,26 @@ void Board::ResetBoard(){
 	grid = vector<vector<char>>(rows + 4, vector<char>(cols, ' '));
 }
 
+void Board::clearSFX(int x)
+{
+	for (int j = 0; j < cols; j++)
+	{
+		drawShadedBlock(colorMap[grid[x][j]], x + BORDER_W, j + BORDER_L);
+	}
+	Sleep(200);
+	for (int j = 0; j < cols; j++)
+	{
+		drawBlock(colorMap[grid[x][j]], x + BORDER_W, j + BORDER_L);
+	}
+	Sleep(200);
+	for (int j = 0; j < cols; j++)
+	{
+		drawShadedBlock(colorMap[grid[x][j]], x + BORDER_W, j + BORDER_L);
+	}
+	Sleep(200);
+	for (int j = 0; j < cols; j++)
+	{
+		drawBlock(colorMap[grid[x][j]], x + BORDER_W, j + BORDER_L);
+	}
+	Sleep(400);
+}

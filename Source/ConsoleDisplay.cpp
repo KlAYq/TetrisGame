@@ -99,3 +99,26 @@ void drawBlock(string color, int Y, int X)
     GoTo(Y * 2 + 1, X * 3);
     cout << Highlight(color, "   ");
 }
+
+void drawShadedBlock(string color, int Y, int X)
+{
+    GoTo(Y * 2, X * 3);
+//    cout << Highlight(color, "   ");
+    char c = 176;
+    string s(3, c);
+    cout << Highlight(color, s);
+    GoTo(Y * 2 + 1, X * 3);
+//    cout << Highlight(color, "   ");
+    cout << Highlight(color, s);
+}
+
+void ShowConsoleCursor(bool showFlag)
+{
+    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    CONSOLE_CURSOR_INFO     cursorInfo;
+
+    GetConsoleCursorInfo(out, &cursorInfo);
+    cursorInfo.bVisible = showFlag; // set the cursor visibility
+    SetConsoleCursorInfo(out, &cursorInfo);
+}

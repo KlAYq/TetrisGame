@@ -26,6 +26,7 @@ private:
 	int score;
 public:
     TetrisGame(int numRows, int numCols);
+    ~TetrisGame();
 	void ResetGame();
 	
     void spawnTetromino(int x, int y);

@@ -12,6 +12,7 @@ int main()
     DisableResizeWindow();
     ShowScrollbarOption(0);
     DisableCtrButton(0, 0, 1);
+    ShowConsoleCursor(false);
     SetConsoleTitle("Tetrizz");
 	srand(time(0));
 
@@ -21,7 +22,6 @@ int main()
 //	game.displayUI();
 	game.GameInit();
 //	game.drawCredits();
-    PlaySound(TEXT("sfx/Theme01.wav"), NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
     
     return 0;
 }

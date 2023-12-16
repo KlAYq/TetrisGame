@@ -7,6 +7,16 @@ TetrisGame::TetrisGame(int numRows, int numCols) :
 			score(0), level(1), starttime(time(0)),
 			clearedlines(0) { time(&nowtime); }
 
+TetrisGame::~TetrisGame(){
+	board.ResetBoard();
+	while (tetrominoQueue.size()){
+		delete tetrominoQueue[0];
+		tetrominoQueue.erase(tetrominoQueue.begin());
+	}
+	if (currentTetromino)
+		delete currentTetromino;
+	currentTetromino = NULL;
+}
 void TetrisGame::spawnTetromino(int x, int y)
 {
 	while (tetrominoQueue.size() < 3)
@@ -39,7 +49,7 @@ void TetrisGame::update_score(int newclearedlines)
 
 bool TetrisGame::gameOver()
 {
-	return !board.isValid() || (nowtime - starttime >= 10);
+	return !board.isValid() || (nowtime - starttime >= 180);
 }
 
 void TetrisGame::updateGame()
@@ -81,6 +91,10 @@ void TetrisGame::updateGame()
 		cout << score;
 		GoTo(19, 83);
 		cout << time(NULL) - starttime << "s";
+		GoTo(22, 83);
+		cout << level;
+		GoTo(25, 90);
+		cout << clearedlines << "/" << level * 2 + 1;
 	}
 
 	char input;
@@ -103,7 +117,7 @@ void TetrisGame::updateGame()
 		case 'w': // rotate
 			currentTetromino->rotate(board);
 			break;
-		case 'f': // drop
+		case ' ': // drop
 			while (!currentTetromino->collisionCheck(board))
 				currentTetromino->move(1, 0, board);
 			break;
@@ -173,14 +187,20 @@ void TetrisGame::displayUI() const
 	cout << "Current Score: ";
 	GoTo(18, 83);
 	cout << "Time: ";
-	GoTo(22, 83);
-	cout << "[A] - Move Left";
+	GoTo(21, 83);
+	cout << "Level: ";
 	GoTo(24, 83);
-	cout << "[D] - Move Right";
-	GoTo(26, 83);
-	cout << "[W] - Spin";
+	cout << "Lines: ";
 	GoTo(28, 83);
-	cout << "[S] - Drop block";
+	cout << "[A] - Move Left";
+	GoTo(30, 83);
+	cout << "[D] - Move Right";
+	GoTo(32, 83);
+	cout << "[W] - Spin";
+	GoTo(34, 83);
+	cout << "[S] - Soft drop";
+	GoTo(36, 83);
+	cout << "[SPACE] - Hard drop";
 	
 	char colorInputs[7] = "TOSJIL";
 	
@@ -244,6 +264,8 @@ void TetrisGame::drawHowToPlay() const
 	
 	GoTo(19, 70);
 	cout << "Form a line to remove them";
+	GoTo(28 ,67);
+	cout << "This won't do--->";
 	GoTo(43, 67);
 	cout << "Try not to fill the pieces up top";
 	
@@ -322,6 +344,20 @@ void TetrisGame::drawCredits() const{
 		itline++;
 	}
 	im.close();
+	
+	im.open("img/hcmus.txt");
+	itline = 0;
+	while(getline(im, imline))
+	{
+		for (int i = 0; i < imline.length(); i++)
+			if (imline[i] == ' ')
+				drawBlock("000000", 13 + itline, 20 + i);
+			else 
+				drawBlock(colorMap[char(imline[i])], 13 + itline, 20 + i);
+		itline++;
+	}
+	im.close();
+	
 	
 	GoTo(12, 70);
 	cout << "Meet the creators:";
@@ -505,6 +541,7 @@ void TetrisGame::GameInit()
 				ResetGame();
 				displayGame();
 				displayUI();
+				PlaySound(TEXT("sfx/Theme01.wav"), NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
 				starttime = time(0);
 				while (true) {
 		        	updateGame();

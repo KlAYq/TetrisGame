@@ -24,6 +24,7 @@ public:
 	void ResetBoard();
 	void display() const;
 	void clearRow(int x);
+	void clearSFX(int x);
 };
 
 
