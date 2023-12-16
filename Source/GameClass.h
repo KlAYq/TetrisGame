@@ -10,6 +10,7 @@
 #include <string>
 #include <mmsystem.h>
 #include "Tetrominoes.h"
+#include "Board.h"
 using namespace std;
 
 class TetrisGame

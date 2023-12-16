@@ -10,33 +10,11 @@
 #define BORDER_W -2 //
 #define BORDER_L 14 //6
 
+#pragma once
+#include "Board.h"
 using namespace std;
 
-class Tetromino;
-
-// Gameplay board
-class Board
-{
-private:
-    const int rows;
-    const int cols;
-    vector<vector<char>> grid;
-public:
-    Board(int numRows, int numCols);
-
-	void display() const;
-	void ResetBoard();
-	int isInside(int x, int y);
-	int getRow();
-	int getCol();
-	void clearRow(int x);
-	bool checkClear(int pos, int &lines);
-	char getCell(int x, int y);
-	bool isValid();
-	void addShape(Tetromino* tetromino);
-};
-
-
+class Board;
 // Tetromino class represents a single Tetris piece
 class Tetromino 
 {
