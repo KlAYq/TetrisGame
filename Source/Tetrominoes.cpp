@@ -51,7 +51,7 @@ pair<int, int> Tetromino::getPos() { return pos; }
 
 bool Tetromino::collisionCheck(Board& board)
 {
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < blocks[state].size(); i++)
 	{
 		if (pos.first + blocks[state][i].first + 1  == board.getRow() || board.getCell(pos.first + blocks[state][i].first + 1, pos.second + blocks[state][i].second ) != ' '){
 			return true;				
@@ -63,31 +63,35 @@ bool Tetromino::collisionCheck(Board& board)
 void Tetromino::rotate(Board& board){
 	int tempState = (state + 1) % blocks.size();
 
-	int I_shapeOffset = 0;
+	int I_shapeOffset = 0; // Because the positions of the blocks in Tetromino 'I' are offset by 1 in some states, we must include this variable in the calculation to be able to behave like other Tetromino.
 		if (type() == 'I' && (tempState == 1 || tempState == 2))
 			I_shapeOffset = 1;
 	pair <int, int> moveDir = {0, 0};
 	
+	// Check in advance whether the position after rotation is valid or not to have the appropriate move direction
 	for (int i = 0; i < blocks[tempState].size(); i++)
 	{
 		int u = pos.first + blocks[tempState][i].first;
 		int v = pos.second + blocks[tempState][i].second;
 		if ((board.isInside(u + moveDir.first, v + moveDir.second) != 2) || (board.isInside(u + moveDir.first, v + moveDir.second) == 2 && board.getCell(u + moveDir.first, v + moveDir.second) != ' ')){ // one of the block hit the other block -> move up/left/right accordingly
-				if (pos.second + I_shapeOffset > v) 		// need moving to the right
+				if (pos.second + I_shapeOffset > v) 		// move rightward
 						moveDir.second++;
-				else if (pos.second + I_shapeOffset < v) 	// need moving to the left
+				else if (pos.second + I_shapeOffset < v) 	// move leftward 
 						moveDir.second--;
 				else 										// move upward
 					moveDir.first--;
 			}
 	}
+	// Even after moving, there is still an obstacle, the Tetromino will not move or rotate by return the function
 	for (int i = 0; i < blocks[tempState].size(); i++)
 	{
 		int u = pos.first + blocks[tempState][i].first + moveDir.first;
 		int v = pos.second + blocks[tempState][i].second + moveDir.second;
-	if ((board.isInside(u, v) != 2) ||(board.isInside(u, v) == 2 && board.getCell(u, v) != ' ')) 
-		return;
+		if ((board.isInside(u, v) != 2) ||(board.isInside(u, v) == 2 && board.getCell(u, v) != ' ')) 
+			return;
 	}
+
+	// else we move the Tetromino and rotate it
 	move(moveDir.first, moveDir.second, board);
 	clear();
 	state++;

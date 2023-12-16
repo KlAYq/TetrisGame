@@ -51,7 +51,7 @@ void TetrisGame::updateGame()
 	}
 	if (currentTetromino == NULL)
 	{
-		spawnTetromino(0, 5);
+		spawnTetromino(3, 5);
 		currentTetromino->display();
 		displayTetrominoQueue();
 	}

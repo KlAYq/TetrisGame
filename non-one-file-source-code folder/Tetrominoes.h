@@ -3,7 +3,6 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
-//#include <utility>
 #include <conio.h>
 #include <windows.h>
 #include <unistd.h>
@@ -41,20 +40,23 @@ public:
 // Tetromino class represents a single Tetris piece
 class Tetromino {
 protected:
-	int state;
-    pair <int, int> pos;
-    vector <vector <pair <int, int> > > blocks;
+	int state; // represents the rotation state: state 0/1/2/3 <=> 0/90/180/270 degree
+    pair <int, int> pos; // position of the Tetromino in the grid
+    vector <vector <pair <int, int> > > blocks; // position of all the block of the Tetromino relative to pos
 public:
 	Tetromino(int x, int y);
-	void setPos(int x, int y);
-    void move(int offSetX, int offSetY, Board& board);
+	virtual char type() = 0;
+
 	vector <pair<int, int> > getBlocks();
 	pair<int, int> getPos();
+	void setPos(int x, int y);
+
 	bool collisionCheck(Board& board);
+    void move(int offSetX, int offSetY, Board& board);
 	void rotate(Board& board);
+	
     void display();
 	void clear();
-	virtual char type() = 0;
 };
 
 // Teromino types

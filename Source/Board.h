@@ -12,16 +12,18 @@ private:
 public:
     Board(int numRows, int numCols);
 
-	void display() const;
-	void ResetBoard();
-	int isInside(int x, int y);
 	int getRow();
 	int getCol();
-	void clearRow(int x);
+	
+	int isInside(int x, int y);
 	bool checkClear(int pos, int &lines);
 	char getCell(int x, int y);
 	bool isValid();
 	void addShape(Tetromino* tetromino);
+	
+	void ResetBoard();
+	void display() const;
+	void clearRow(int x);
 };
 
 

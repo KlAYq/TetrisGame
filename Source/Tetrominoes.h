@@ -19,20 +19,23 @@ class Board;
 class Tetromino 
 {
 protected:
-	int state;
-    pair <int, int> pos;
-    vector <vector <pair <int, int> > > blocks;
+	int state; // represents the rotation state: state 0/1/2/3 <=> 0/90/180/270 degree
+    pair <int, int> pos; // position of the Tetromino in the grid
+    vector <vector <pair <int, int> > > blocks; // position of all the block of the Tetromino relative to pos
 public:
 	Tetromino(int x = 0, int y = 0);
-	void setPos(int x, int y);
-    void move(int offSetX, int offSetY, Board& board);
-	vector <pair<int, int> > getBlocks();
+	virtual char type() = 0;
+
 	pair<int, int> getPos();
+	vector <pair<int, int> > getBlocks();
+	void setPos(int x, int y);
+    
+	void move(int offSetX, int offSetY, Board& board);
 	bool collisionCheck(Board& board);
 	void rotate(Board& board);
+
     void display();
-    void clear();
-	virtual char type() = 0;
+    void clear();	
 };
 
 // Teromino types
